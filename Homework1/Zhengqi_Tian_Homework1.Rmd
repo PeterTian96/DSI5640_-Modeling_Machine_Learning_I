@@ -4,7 +4,7 @@ author: Zhengqi Tian
 date: January 15, 2020
 output: github_document
 ---
-
+#Question 1: Copy and paste the code
 
 
 
@@ -36,6 +36,7 @@ plot_mix_data <- expression({
 
 eval(plot_mix_data)
 ```
+
 
 ## fit linear classifier
 ```{r}
@@ -81,7 +82,7 @@ sapply(lc_cont, lines)
 ```
 
 
-## Rewrite predictions from linear classifier for Question3
+## Rewrite predictions from linear classifier for Question 3
 ```{r}
 predict_lc_Q3 <- function(x) {
   traindata<-data.frame(x,dat$y)
@@ -93,7 +94,7 @@ predict_lc_Q3 <- function(x) {
 
 
 
-## Rewrite fit model to mixture data and make predictions for Question3
+## Rewrite fit model to mixture data and make predictions for Question 3
 ```{r}
 lc_pred_Q3 <- predict_lc_Q3(dat$x)
 ```
