@@ -1,7 +1,7 @@
 ---
 title: "Zhengqi_Tian_Homework1"
 author: Zhengqi Tian
-date: January 15, 2020
+date: January 15, 2022
 output: github_document
 ---
 #Question 1: Copy and paste the code
@@ -158,16 +158,11 @@ eval(plot_mix_data)
 sapply(lc_cont, lines)
 sapply(lc_cont_Q4, lines)
 ```
-#Variance Comparsion
-```{r}
-traindata<-data.frame(dat$x,dat$y)
-traindata<-data.frame(cbind(traindata,y=dat$y))
-colnames(traindata)<-c('x1','x2','y')
-summary(lm(y~x1+x2,data=traindata))$sigma^2
-summary(lm(y~x1+x2+I(x1^2)+I(x1^2),data=traindata))$sigma^2
-```
 
-# As we adding adding squared terms for x1 and x2 to the linear model, the regression is going more complicate. Thus, the straight line becomes a curve. Thus, we can find that the variance incrase and the bias decrease. Thus, we should make a trade-off between variance and bias. Comparing the variance, the more complicate function will have a larger variance.
+
+#Bias is the difference between the average prediction of our model and the correct value which we are trying to predict. Variance is the amount that the estimate of the target function will change given different training data. High bias is possible when the model simple. when the model goes complicate, the bias will go low, but the amount that the estimate of the target function will change given different training data will increase.It is clear that it will consider more factors,which make outcome with more complicate assumption.
+
+#As we adding adding squared terms for x1 and x2 to the linear model, the regression is going more complicate. Thus, the straight line becomes a curve. Thus, we can find that the variance increase and the bias decrease. Different from the simple regular linear model with two parameter, the complicate will consider more assumption for the outcome. Thus, it will provide a more close reuslt than the simple linear model can, which lower the bais and increase the variance.  Thus, we should make a trade-off between variance and bias. Comparing the variance, the more complicate function will have a larger variance.
 
 ## plot data and decision surface
 ```{r}

@@ -1,7 +1,7 @@
 Zhengqi_Tian_Homework1
 ================
 Zhengqi Tian
-January 15, 2020
+January 15, 2022
 
 #Question 1: Copy and paste the code
 
@@ -209,24 +209,24 @@ sapply(lc_cont_Q4, lines)
     ## [[1]]
     ## NULL
 
-#Variance Comparsion
+#Bias is the difference between the average prediction of our model and
+the correct value which we are trying to predict. Variance is the amount
+that the estimate of the target function will change given different
+training data. High bias is possible when the model simple. when the
+model goes complicate, the bias will go low, but the amount that the
+estimate of the target function will change given different training
+data will increase.It is clear that it will consider more factors,which
+make outcome with more complicate assumption.
 
-``` r
-traindata<-data.frame(dat$x,dat$y)
-traindata<-data.frame(cbind(traindata,y=dat$y))
-colnames(traindata)<-c('x1','x2','y')
-summary(lm(y~x1+x2,data=traindata))$sigma^2
-```
-
-    ## [1] 0.1804128
-
-``` r
-summary(lm(y~x1+x2+I(x1^2)+I(x1^2),data=traindata))$sigma^2
-```
-
-    ## [1] 0.1811255
-
-# As we adding adding squared terms for x1 and x2 to the linear model, the regression is going more complicate. Thus, the straight line becomes a curve. Thus, we can find that the variance incrase and the bias decrease. Thus, we should make a trade-off between variance and bias. Comparing the variance, the more complicate function will have a larger variance.
+#As we adding adding squared terms for x1 and x2 to the linear model,
+the regression is going more complicate. Thus, the straight line becomes
+a curve. Thus, we can find that the variance increase and the bias
+decrease. Different from the simple regular linear model with two
+parameter, the complicate will consider more assumption for the outcome.
+Thus, it will provide a more close reuslt than the simple linear model
+can, which lower the bais and increase the variance. Thus, we should
+make a trade-off between variance and bias. Comparing the variance, the
+more complicate function will have a larger variance.
 
 ## plot data and decision surface
 
@@ -234,7 +234,7 @@ summary(lm(y~x1+x2+I(x1^2)+I(x1^2),data=traindata))$sigma^2
 eval(plot_mix_data)
 ```
 
-![](Zhengqi_Tian_Homework1_files/figure-gfm/unnamed-chunk-21-1.png)<!-- -->
+![](Zhengqi_Tian_Homework1_files/figure-gfm/unnamed-chunk-20-1.png)<!-- -->
 
 ``` r
 line(lc_pred)
@@ -267,7 +267,7 @@ contour(knn_pred,
         levels=c(0.2, 0.5, 0.8))
 ```
 
-![](Zhengqi_Tian_Homework1_files/figure-gfm/unnamed-chunk-23-1.png)<!-- -->
+![](Zhengqi_Tian_Homework1_files/figure-gfm/unnamed-chunk-22-1.png)<!-- -->
 
 ## find the contours in 2D space such that knn_pred == 0.5
 
@@ -282,7 +282,7 @@ eval(plot_mix_data)
 sapply(knn_cont, lines)
 ```
 
-![](Zhengqi_Tian_Homework1_files/figure-gfm/unnamed-chunk-25-1.png)<!-- -->
+![](Zhengqi_Tian_Homework1_files/figure-gfm/unnamed-chunk-24-1.png)<!-- -->
 
     ## [[1]]
     ## NULL
@@ -342,7 +342,7 @@ for(b in 1:3) {
 }
 ```
 
-![](Zhengqi_Tian_Homework1_files/figure-gfm/unnamed-chunk-27-1.png)<!-- -->
+![](Zhengqi_Tian_Homework1_files/figure-gfm/unnamed-chunk-26-1.png)<!-- -->
 # from the bootstraps, we can have the same result that more complicate
 LM will have a larger variance and smaller bias than simple LM has. We
 can find in each bootstrap, the simple LM is closer to the Baye line
@@ -372,7 +372,7 @@ for(b in 1:3) {
 }
 ```
 
-![](Zhengqi_Tian_Homework1_files/figure-gfm/unnamed-chunk-28-1.png)<!-- -->
+![](Zhengqi_Tian_Homework1_files/figure-gfm/unnamed-chunk-27-1.png)<!-- -->
 
 ## plot 20-NN classifier for three bootstraps
 
@@ -397,4 +397,4 @@ for(b in 1:3) {
 }
 ```
 
-![](Zhengqi_Tian_Homework1_files/figure-gfm/unnamed-chunk-29-1.png)<!-- -->
+![](Zhengqi_Tian_Homework1_files/figure-gfm/unnamed-chunk-28-1.png)<!-- -->
