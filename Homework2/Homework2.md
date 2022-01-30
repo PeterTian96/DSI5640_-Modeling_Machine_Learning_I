@@ -204,11 +204,9 @@ lines(x = x_grid, y = lin_pred_tau75, col = 'blue',lty=4)
 legend("bottomright", title="Error Type",c("L1 loss", "L2 loss","tau = 0.25", "tau = 0.75"), lty = c(1,2,3,4),col = c("darkgreen","pink", "red", "blue"))
 ```
 
-![](Homework2_files/figure-gfm/unnamed-chunk-15-1.png)<!-- --> \# Write
-functions to fit and predict from a simple nonlinear model with three
-parameters defined by ‘beta\[1\] + beta\[2\]*exp(-beta\[3\]*x)’. Hint:
-make copies of ‘fit\_lin’ and ‘predict\_lin’ and modify them to fit the
-nonlinear model. Use c(-1.0, 0.0, -0.3) as ‘beta\_init’.
+![](Homework2_files/figure-gfm/unnamed-chunk-15-1.png)<!-- -->
+
+# Write functions to fit and predict from a simple nonlinear model with three parameters defined by ‘beta\[1\] + beta\[2\]*exp(-beta\[3\]*x)’. Hint: make copies of ‘fit\_lin’ and ‘predict\_lin’ and modify them to fit the nonlinear model. Use c(-1.0, 0.0, -0.3) as ‘beta\_init’.
 
 ``` r
 ## make predictions from nonlinear model
