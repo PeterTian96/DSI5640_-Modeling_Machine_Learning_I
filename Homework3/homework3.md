@@ -341,6 +341,20 @@ error(prostate_test, fit, lam=0.05, form=form)
 
     ## [1] 0.4945864
 
+``` r
+## train_error at lambda=0.06
+error(prostate_train, fit, lam=0.06, form=form)
+```
+
+    ## [1] 0.4732063
+
+``` r
+## testing error at lambda=0.06
+error(prostate_test, fit, lam=0.06, form=form)
+```
+
+    ## [1] 0.4906623
+
 # Train a ridge regression model using the glmnet function, and tune the value of lambda (i.e., use guess and check to find the value of lambda that approximately minimizes the test error).
 
 # Create a figure that shows the training and test error associated with ridge regression as a function of lambda
