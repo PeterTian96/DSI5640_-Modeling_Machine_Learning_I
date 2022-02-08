@@ -28,9 +28,9 @@ library('tidyverse')
     ## ── Attaching packages ─────────────────────────────────────── tidyverse 1.3.1 ──
 
     ## ✓ ggplot2 3.3.5     ✓ purrr   0.3.4
-    ## ✓ tibble  3.1.4     ✓ dplyr   1.0.7
-    ## ✓ tidyr   1.1.3     ✓ stringr 1.4.0
-    ## ✓ readr   2.0.1     ✓ forcats 0.5.1
+    ## ✓ tibble  3.1.6     ✓ dplyr   1.0.7
+    ## ✓ tidyr   1.1.4     ✓ stringr 1.4.0
+    ## ✓ readr   2.0.2     ✓ forcats 0.5.1
 
     ## ── Conflicts ────────────────────────────────────────── tidyverse_conflicts() ──
     ## x dplyr::filter() masks stats::filter()
@@ -154,7 +154,7 @@ cor(prostate_train)
 
 # Treat lcavol as the outcome, and use all other variables in the data set as predictors.
 
-\#With the training subset of the prostate data, train a least-squares
+#With the training subset of the prostate data, train a least-squares
 regression model with all predictors using the lm function.
 
 ``` r
@@ -220,7 +220,7 @@ error(prostate_test, fit)
 form  <- lcavol ~  lweight + age + lbph + lcp + pgg45 + lpsa + svi + gleason
 x_inp <- model.matrix(form, data=prostate_train)
 y_out <- prostate_train$lcavol
-fit <- glmnet(x=x_inp, y=y_out, lambda=seq(0.5, 0, -0.05))
+fit <- glmnet(x=x_inp, y=y_out, lambda=seq(0.5, 0, -0.05),alpha=0)
 print(fit$beta)
 ```
 
@@ -228,26 +228,36 @@ print(fit$beta)
 
     ##    [[ suppressing 11 column names 's0', 's1', 's2' ... ]]
 
-    ##                                                                        
-    ## (Intercept) .         .         .         .         .         .        
-    ## lweight     .         .         .         .         .         .        
-    ## age         .         .         .         .         .         .        
-    ## lbph        .         .         .         .         .         .        
-    ## lcp         0.1473018 0.1714414 0.1955919 0.2197423 0.2438928 0.2680433
-    ## pgg45       .         .         .         .         .         .        
-    ## lpsa        0.2535992 0.2816134 0.3096214 0.3376294 0.3656374 0.3936454
-    ## svi         .         .         .         .         .         .        
-    ## gleason     .         .         .         .         .         .        
-    ##                                                                         
-    ## (Intercept) .         .            .            .            .          
-    ## lweight     .         .            .            .           -0.113959029
-    ## age         .         0.0006179005 0.005823836  0.010987417  0.020114429
-    ## lbph        .         .            .           -0.004060083 -0.056959719
-    ## lcp         0.2921937 0.3160341041 0.337951116  0.352226351  0.418442122
-    ## pgg45       .         .            .            .           -0.009110807
-    ## lpsa        0.4216534 0.4489636282 0.470877681  0.491246304  0.575583816
-    ## svi         .         .            .            0.026126960  0.035184640
-    ## gleason     .         .            .            0.011159844  0.224210312
+    ##                                                                    
+    ## (Intercept)  .             .             .             .           
+    ## lweight      0.0993164708  9.167566e-02  0.0826683948  0.0719539791
+    ## age          0.0129153943  1.324527e-02  0.0136179441  0.0140406458
+    ## lbph        -0.0145798645 -1.634009e-02 -0.0183250211 -0.0206075810
+    ## lcp          0.2406189663  2.481045e-01  0.2566365965  0.2662889674
+    ## pgg45        0.0002559092 -6.282802e-05 -0.0004352183 -0.0008738898
+    ## lpsa         0.3427088262  3.542773e-01  0.3670625828  0.3813402190
+    ## svi          0.3767521726  3.693591e-01  0.3595330020  0.3468674180
+    ## gleason      0.1379543516  1.394770e-01  0.1413173561  0.1436779615
+    ##                                                                             
+    ## (Intercept)  .            .            .            .            .          
+    ## lweight      0.059127616  0.043652593  0.024777969  0.001504802 -0.027603986
+    ## age          0.014526957  0.015088490  0.015748487  0.016532948  0.017480107
+    ## lbph        -0.023258103 -0.026377963 -0.030098852 -0.034621150 -0.040241264
+    ## lcp          0.277447149  0.290342311  0.305728439  0.324372008  0.347616547
+    ## pgg45       -0.001398912 -0.002031353 -0.002810371 -0.003788173 -0.005050263
+    ## lpsa         0.397429712  0.415786556  0.437009864  0.461951799  0.491849702
+    ## svi          0.330415198  0.309283880  0.281608260  0.245177911  0.196427346
+    ## gleason      0.146778188  0.150949425  0.156678907  0.164800413  0.176722769
+    ##                                      
+    ## (Intercept)  .            .          
+    ## lweight     -0.064680201 -0.113137304
+    ## age          0.018643148  0.020098181
+    ## lbph        -0.047425776 -0.056962692
+    ## lcp          0.377657417  0.418431830
+    ## pgg45       -0.006739814 -0.009116838
+    ## lpsa         0.528596455  0.575318051
+    ## svi          0.129711598  0.035342349
+    ## gleason      0.194999807  0.224585243
 
 ``` r
 ## functions to compute testing/training error with glmnet
@@ -269,91 +279,91 @@ error(prostate_train, fit, lam=0, form=form)
 error(prostate_test, fit, lam=0, form=form)
 ```
 
-    ## [1] 0.5084581
+    ## [1] 0.5083923
 
 ``` r
 ## train_error at lambda=0.01
 error(prostate_train, fit, lam=0.01, form=form)
 ```
 
-    ## [1] 0.4396679
+    ## [1] 0.4385064
 
 ``` r
 ## testing error at lambda=0.01
 error(prostate_test, fit, lam=0.01, form=form)
 ```
 
-    ## [1] 0.4976341
+    ## [1] 0.5047688
 
 ``` r
 ## train_error at lambda=0.02
 error(prostate_train, fit, lam=0.02, form=form)
 ```
 
-    ## [1] 0.4435656
+    ## [1] 0.4389101
 
 ``` r
 ## testing error at lambda=0.02
 error(prostate_test, fit, lam=0.02, form=form)
 ```
 
-    ## [1] 0.4908349
+    ## [1] 0.5016231
 
 ``` r
 ## train_error at lambda=0.03
 error(prostate_train, fit, lam=0.03, form=form)
 ```
 
-    ## [1] 0.4500642
+    ## [1] 0.4395821
 
 ``` r
 ## testing error at lambda=0.03
 error(prostate_test, fit, lam=0.03, form=form)
 ```
 
-    ## [1] 0.4880606
+    ## [1] 0.498955
 
 ``` r
 ## train_error at lambda=0.04
 error(prostate_train, fit, lam=0.04, form=form)
 ```
 
-    ## [1] 0.4591635
+    ## [1] 0.4405224
 
 ``` r
 ## testing error at lambda=0.04
 error(prostate_test, fit, lam=0.04, form=form)
 ```
 
-    ## [1] 0.4893111
+    ## [1] 0.4967647
 
 ``` r
 ## train_error at lambda=0.05
 error(prostate_train, fit, lam=0.05, form=form)
 ```
 
-    ## [1] 0.4708637
+    ## [1] 0.4417309
 
 ``` r
 ## testing error at lambda=0.05
 error(prostate_test, fit, lam=0.05, form=form)
 ```
 
-    ## [1] 0.4945864
+    ## [1] 0.4950521
 
 ``` r
 ## train_error at lambda=0.06
 error(prostate_train, fit, lam=0.06, form=form)
 ```
 
-    ## [1] 0.4732063
+    ## [1] 0.4428172
 
 ``` r
 ## testing error at lambda=0.06
 error(prostate_test, fit, lam=0.06, form=form)
 ```
 
-    ## [1] 0.4906623
+    ## [1] 0.4937929
 
 # Train a ridge regression model using the glmnet function, and tune the value of lambda (i.e., use guess and check to find the value of lambda that approximately minimizes the test error).
 
