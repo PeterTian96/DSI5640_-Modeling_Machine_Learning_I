@@ -216,4 +216,4 @@ abline(h=cverrs_mean[best_idx] + cverrs_sd[best_idx], lty=3)
 
 # Question 7:Interpret the resulting figures and select a suitable value for the tuning parameter.
 
-Because of the 1sd rule, Here the k == 23 will be the best one
+Because of the 1sd rule, Here the k = 23 will be the best one
