@@ -51,8 +51,6 @@ test<-mcycle[-sid,]
 
 # Question 2: Using the mcycle data, consider predicting the mean acceleration as a function of time. Use the Nadaraya-Watson method with the k-NN kernel
 
-# Question 3: function to create a series of prediction models by varying the tuning parameter over a sequence of values. (hint: the script already implements this)
-
 ``` r
 # predicting the mean acceleration
 y <- train$accel
@@ -113,6 +111,17 @@ lines(x_plot, y_hat_plot, col="#882255", lwd=2)
 ```
 
 ![](Homework5_files/figure-gfm/unnamed-chunk-6-1.png)<!-- -->
+
+# Question 3: function to create a series of prediction models by varying the tuning parameter over a sequence of values. (hint: the script already implements this)
+
+``` r
+## set k from 1 to 10
+k_seq=seq(1, 10, by = 1)
+## make predictions using NW method at training inputs
+for (n in k_seq){
+  y_hat_plot <- nadaraya_watson(y, x, x_plot, kernel_k_nearest_neighbors, n)
+}
+```
 
 # Question 4: With the squared-error loss function, compute and plot the training error, AIC, BIC, and validation error (using the validation data) as functions of the tuning parameter.
 
@@ -299,11 +308,12 @@ segments(x0=1:20, x1=1:20,
          y1=cverrs_mean+cverrs_sd)
 best_idx <- which.min(cverrs_mean)
 points(x=best_idx, y=cverrs_mean[best_idx], pch=20)
-abline(h=cverrs_mean[best_idx] + cverrs_sd[best_idx], lty=3)
+abline(h=cverrs_mean[best_idx] + cverrs_sd[best_idx], lty=3) 
 ```
 
-![](Homework5_files/figure-gfm/unnamed-chunk-16-1.png)<!-- -->
+![](Homework5_files/figure-gfm/unnamed-chunk-17-1.png)<!-- -->
 
 # Question 7:Interpret the resulting figures and select a suitable value for the tuning parameter.
 
-Because of the 1sd rule, Here the k = 23 will be the best one
+From the glot, we can see that k equals 8 is th best here. Then K \>8,
+both test and train errors increase.
