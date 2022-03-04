@@ -15,9 +15,9 @@ library(tidyverse)
     ## ── Attaching packages ─────────────────────────────────────── tidyverse 1.3.1 ──
 
     ## ✓ ggplot2 3.3.5     ✓ purrr   0.3.4
-    ## ✓ tibble  3.1.6     ✓ dplyr   1.0.7
-    ## ✓ tidyr   1.1.4     ✓ stringr 1.4.0
-    ## ✓ readr   2.0.2     ✓ forcats 0.5.1
+    ## ✓ tibble  3.1.6     ✓ dplyr   1.0.8
+    ## ✓ tidyr   1.2.0     ✓ stringr 1.4.0
+    ## ✓ readr   2.1.2     ✓ forcats 0.5.1
 
     ## ── Conflicts ────────────────────────────────────────── tidyverse_conflicts() ──
     ## x dplyr::filter() masks stats::filter()
@@ -49,7 +49,7 @@ sid<-as.numeric(rownames(train))
 test<-mcycle[-sid,]
 ```
 
-# Question 2: Using the mcycle data, consider predicting the mean acceleration as a function of time. Use the Nadaraya-Watson method with the k-NN kernel
+# Question 2: Using the mcycle data, consider predicting the mean acceleration as a function of time. Use the Nadaraya-Watson method with the k-NN kernel function to create a series of prediction models by varying the tuning parameter over a sequence of values. (hint: the script already implements this)
 
 ``` r
 # predicting the mean acceleration
@@ -111,8 +111,6 @@ lines(x_plot, y_hat_plot, col="#882255", lwd=2)
 ```
 
 ![](Homework5_files/figure-gfm/unnamed-chunk-6-1.png)<!-- -->
-
-# Question 3: function to create a series of prediction models by varying the tuning parameter over a sequence of values. (hint: the script already implements this)
 
 ``` r
 ## set k from 1 to 10
@@ -186,63 +184,64 @@ effective_df <- function(y, x, kern, ...) {
 
 ``` r
 ## how does k affect shape of predictor and eff. df using k-nn kernel ?
-# manipulate({
-#   ## make predictions using NW method at training inputs
-#   y_hat <- nadaraya_watson(y, x, x,
-#     kern=kernel_k_nearest_neighbors, k=k_slider)
-#   edf <- effective_df(y, x, 
-#     kern=kernel_k_nearest_neighbors, k=k_slider)
-#   aic_ <- aic(y, y_hat, edf)
-#   bic_ <- bic(y, y_hat, edf)
-#   y_hat_plot <- nadaraya_watson(y, x, x_plot,
-#     kern=kernel_k_nearest_neighbors, k=k_slider)
-#   plot(x, y, xlab="Time (ms)", ylab="Acceleration (g)")
-#   legend('topright', legend = c(
-#     paste0('eff. df = ', round(edf,1)),
-#     paste0('aic = ', round(aic_, 1)),
-#     paste0('bic = ', round(bic_, 1))),
-#     bty='n')
-#   lines(x_plot, y_hat_plot, col="#882255", lwd=2) 
-# }, k_slider=slider(1, 10, initial=3, step=1))
+
+   ## make predictions using NW method at training inputs
+   y_hat <- nadaraya_watson(y, x, x,
+     kern=kernel_k_nearest_neighbors, k=1)
+   edf <- effective_df(y, x, 
+     kern=kernel_k_nearest_neighbors, k=1)
+   aic_ <- aic(y, y_hat, edf)
+   bic_ <- bic(y, y_hat, edf)
+   y_hat_plot <- nadaraya_watson(y, x, x_plot,
+     kern=kernel_k_nearest_neighbors, k=1)
+   plot(x, y, xlab="Time (ms)", ylab="Acceleration (g)")
+   legend('topright', legend = c(
+     paste0('eff. df = ', round(edf,1)),
+     paste0('aic = ', round(aic_, 1)),
+     paste0('bic = ', round(bic_, 1))),
+     bty='n')
+   lines(x_plot, y_hat_plot, col="#882255", lwd=2) 
 ```
 
-# Question 5: For each value of the tuning parameter, Perform 5-fold cross-validation using the combined training and validation data. This results in 5 estimates of test error per tuning parameter value.
+![](Homework5_files/figure-gfm/unnamed-chunk-14-1.png)<!-- -->
+
+# Question 4: For each value of the tuning parameter, Perform 5-fold cross-validation using the combined training and validation data. This results in 5 estimates of test error per tuning parameter value.
 
 ## 5-fold cross-validation of knnreg model
 
 ``` r
 ## create five folds
-set.seed(1)
+set.seed(100)
 mcycle_flds  <- createFolds(mcycle$accel, k=5)
 print(mcycle_flds)
 ```
 
     ## $Fold1
-    ##  [1]   2   5  11  12  15  23  26  45  46  51  54  58  66  75  76  80  83  84  87
-    ## [20]  90  96  98 115 122 128 131 132
+    ##  [1]   5  13  21  23  35  37  39  48  49  61  63  65  66  68  77  83  88  93 117
+    ## [20] 119 123 126 127 128 133
     ## 
     ## $Fold2
-    ##  [1]   8  14  17  25  30  33  36  41  42  43  44  48  49  68  78  81  91  93  94
-    ## [20]  99 102 106 108 110 126 127 130
+    ##  [1]   4   8   9  10  11  15  19  30  31  38  41  44  47  53  56  73  80  84  87
+    ## [20]  90  91 104 107 110 120 122 129
     ## 
     ## $Fold3
-    ##  [1]   4   7  21  22  24  28  29  39  47  50  53  55  61  64  67  69  79  86  92
-    ## [20] 105 107 112 120 121 123 133
+    ##  [1]   3  14  16  18  20  29  32  34  46  57  60  62  71  72  75  76  79  81  92
+    ## [20]  94 102 103 108 114 116 118 121
     ## 
     ## $Fold4
-    ##  [1]   1   3   6   9  16  18  31  32  34  37  40  52  57  59  63  70  88  97 100
-    ## [20] 101 103 114 116 118 124 129
+    ##  [1]   2   6   7  17  22  27  33  42  43  45  51  52  55  67  70  78  82  85  89
+    ## [20]  99 105 106 109 111 112 131 132
     ## 
     ## $Fold5
-    ##  [1]  10  13  19  20  27  35  38  56  60  62  65  71  72  73  74  77  82  85  89
-    ## [20]  95 104 109 111 113 117 119 125
+    ##  [1]   1  12  24  25  26  28  36  40  50  54  58  59  64  69  74  86  95  96  97
+    ## [20]  98 100 101 113 115 124 125 130
 
 ``` r
 sapply(mcycle_flds, length) 
 ```
 
     ## Fold1 Fold2 Fold3 Fold4 Fold5 
-    ##    27    27    26    26    27
+    ##    25    27    27    27    27
 
 ## 5 estimates of test error
 
@@ -267,7 +266,7 @@ cvknnreg <- function(kNN = 10, flds=mcycle_flds) {
 }
 ```
 
-# Question 6: Plot the CV-estimated test error (average of the five estimates from each fold) as a function of the tuning parameter. Add vertical line segments to the figure (using the segments function in R) that represent one “standard error” of the CV-estimated test error (standard deviation of the five estimates from each fold).
+# Question 5: Plot the CV-estimated test error (average of the five estimates from each fold) as a function of the tuning parameter. Add vertical line segments to the figure (using the segments function in R) that represent one “standard error” of the CV-estimated test error (standard deviation of the five estimates from each fold).
 
 # CV-estimated test error
 
@@ -277,24 +276,24 @@ cverrs <- sapply(1:20, cvknnreg)
 print(cverrs) ## rows are k-folds (1:5), cols are kNN (1:20)
 ```
 
-    ##           [,1]      [,2]      [,3]      [,4]      [,5]      [,6]      [,7]
-    ## [1,]  833.7631  582.3799  520.4267  524.4643  541.7711  478.6416  445.9896
-    ## [2,] 1352.1064 1381.4486 1297.2430 1324.4854 1098.2313 1122.7449 1141.9824
-    ## [3,]  984.5000  632.1399  456.9012  488.1716  557.1328  522.9114  539.9713
-    ## [4,] 1177.9617  893.0425  631.6250  648.2299  643.6340  697.5926  662.9493
-    ## [5,]  594.9439  573.1915  439.9326  395.8718  415.9289  400.8986  348.2554
-    ##           [,8]      [,9]     [,10]     [,11]     [,12]     [,13]    [,14]
-    ## [1,]  398.2609  384.7866  407.2981  446.4139  434.4257  428.8328 447.7663
-    ## [2,] 1106.4601 1100.6343 1008.7705 1057.8712 1039.9583 1003.2420 961.8530
-    ## [3,]  536.8323  580.3196  613.0110  624.9374  628.4059  645.9322 656.1005
-    ## [4,]  619.5004  605.5366  593.4215  576.6957  606.5749  610.0195 587.4333
-    ## [5,]  372.7873  459.0067  489.4587  508.5917  470.9600  418.4527 461.5154
-    ##         [,15]    [,16]    [,17]    [,18]    [,19]    [,20]
-    ## [1,] 418.1714 413.5000 416.8825 408.8881 434.2074 426.0638
-    ## [2,] 972.7536 951.6233 949.5257 976.1762 998.5977 962.6726
-    ## [3,] 670.7562 698.0429 718.1851 784.7335 817.6874 859.8918
-    ## [4,] 593.5669 562.1299 568.0380 611.9726 624.0383 662.2680
-    ## [5,] 518.0408 519.1216 511.8726 544.0493 560.4584 623.2298
+    ##           [,1]      [,2]     [,3]     [,4]     [,5]     [,6]     [,7]     [,8]
+    ## [1,]  997.6650  714.4913 587.1123 581.2436 545.2505 559.8968 546.8003 539.7921
+    ## [2,]  695.4783  496.4465 396.9731 440.2303 398.1633 342.0288 272.9376 203.2395
+    ## [3,]  968.1346  831.0187 846.0472 893.5528 835.8301 897.0734 850.0409 867.3185
+    ## [4,] 1080.4844 1001.1064 859.7604 722.0259 730.2249 785.8331 799.7283 852.0883
+    ## [5,]  989.0818  977.3568 586.6572 461.5940 555.2788 541.7706 580.8977 549.4356
+    ##          [,9]    [,10]    [,11]    [,12]    [,13]    [,14]    [,15]    [,16]
+    ## [1,] 569.9457 553.4544 566.2010 573.8413 524.9770 558.6340 589.6369 590.0329
+    ## [2,] 213.9730 237.9303 245.9675 264.8992 259.4090 261.9348 280.7410 296.0850
+    ## [3,] 800.2472 837.5268 763.6965 802.4372 811.7969 821.9348 803.4317 768.8459
+    ## [4,] 898.8261 869.2792 861.9321 873.6781 860.3733 892.9122 907.2119 916.5713
+    ## [5,] 530.8701 570.3775 594.1729 576.5968 606.6121 636.4485 641.0222 655.2628
+    ##         [,17]    [,18]    [,19]    [,20]
+    ## [1,] 634.0665 644.9846 606.3355 621.9942
+    ## [2,] 291.3015 311.0821 289.8378 296.4595
+    ## [3,] 810.2704 788.6716 794.2236 819.0443
+    ## [4,] 879.4238 850.7059 896.7049 940.8030
+    ## [5,] 701.6257 720.3958 775.2623 819.0434
 
 ``` r
 cverrs_mean <- apply(cverrs, 2, mean)
@@ -313,7 +312,7 @@ abline(h=cverrs_mean[best_idx] + cverrs_sd[best_idx], lty=3)
 
 ![](Homework5_files/figure-gfm/unnamed-chunk-17-1.png)<!-- -->
 
-# Question 7:Interpret the resulting figures and select a suitable value for the tuning parameter.
+# Question 6:Interpret the resulting figures and select a suitable value for the tuning parameter.
 
 From the glot, we can see that k equals 8 is th best here. Then K \>8,
 both test and train errors increase.
