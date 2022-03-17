@@ -93,7 +93,7 @@ for (n in k_seq){
 
 
 
-# Question 4: With the squared-error loss function, compute and plot the training error, AIC, BIC, and validation error (using the validation data) as functions of the tuning parameter.
+# Question 3: With the squared-error loss function, compute and plot the training error, AIC, BIC, and validation error (using the validation data) as functions of the tuning parameter.
 ```{r}
 #Use validation data
 y <- test$accel
@@ -177,7 +177,7 @@ effective_df <- function(y, x, kern, ...) {
 
 ```{r}
 ## create five folds
-set.seed(100)
+set.seed(10)
 mcycle_flds  <- createFolds(mcycle$accel, k=5)
 print(mcycle_flds)
 sapply(mcycle_flds, length) 
@@ -229,3 +229,4 @@ abline(h=cverrs_mean[best_idx] + cverrs_sd[best_idx], lty=3)
 
 # Question 6:Interpret the resulting figures and select a suitable value for the tuning parameter.
 
+From the graph, the error goes down at the first and becomes higher after K=8.the highest k value should be around 1 standard deviation from k = 5. Thus the k here will be 20
