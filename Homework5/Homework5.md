@@ -315,5 +315,5 @@ abline(h=cverrs_mean[best_idx] + cverrs_sd[best_idx], lty=3)
 # Question 6:Interpret the resulting figures and select a suitable value for the tuning parameter.
 
 From the graph, the error goes down at the first and becomes higher
-after K=8.the highest k value should be around 1 standard deviation from
-k = 5. Thus the k here will be 20
+after K=11.the highest k value should be around 1 standard deviation
+from k = 20.
