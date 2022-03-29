@@ -1,0 +1,96 @@
+---
+title: "Homework 6"
+output: github_document
+---
+Goal: Understand and implement a random forest classifier.
+Using the “vowel.train” data, and the “randomForest” function in the R package “randomForest”. Develop a random forest classifier for the vowel data by doing the following:
+Convert the response variable in the “vowel.train” data frame to a factor variable prior to training, so that “randomForest” does classification rather than regression.
+Review the documentation for the “randomForest” function.
+Fit the random forest model to the vowel data using all of the 11 features using the default values of the tuning parameters.
+Use 5-fold CV and tune the model by performing a grid search for the following tuning parameters: 1) the number of variables randomly sampled as candidates at each split; consider values 3, 4, and 5, and 2) the minimum size of terminal nodes; consider a sequence (1, 5, 10, 20, 40, and 80).
+With the tuned model, make predictions using the majority vote method, and compute the misclassification rate using the ‘vowel.test’ data.
+ll.packages('lmtest')
+
+
+```{r}
+library('randomForest')  ## fit random forest
+library('dplyr')    ## data manipulation
+library('magrittr') ## for '%<>%' operator
+library(caret)
+library('viridis')  ## viridis color palette
+```
+
+
+# Problem1&2
+
+```{r}
+train_data <- read.csv("vowel.train.txt")
+train_data$y <- as.factor(train_data$y)
+train_data <- train_data[2:11]
+train_data
+```
+
+
+# Problem3
+```{r}
+vowel_fit <- randomForest(y ~ ., data=train_data)
+vowel_fit
+```
+
+# Problem4
+
+```{r}
+sample_variables <- c(3,4,5)
+node <-c(1, 5, 10, 20, 40, 80)
+```
+```{r}
+setcontrol <- trainControl(method='cv', 
+                        number=5,
+                        search="grid")
+set.seed(1)
+```
+
+```{r}
+tunegrid <- expand.grid(.mtry = sample_variables, 
+                        .min.node.size = node, 
+                        .splitrule = "gini")
+randomforest_fit <- train(y~., 
+                data = train_data, 
+                trControl = setcontrol,
+                metric = "Accuracy",
+                method = 'ranger', 
+                tuneGrid = tunegrid, 
+                classification = TRUE)
+```
+
+```{r}
+tune <- as.data.frame(randomforest_fit[4])
+tune <- tune %>% arrange(desc(results.Accuracy)) # sort by accuracy and select the params with best accuracy
+tune[1,]
+```
+Thus we can find 3 as mtry, 1 as nodesize. 
+```{r}
+set.seed(2)
+best_fit <- randomForest(y ~ ., data=train_data,mtry=3,nodesize=1)
+best_fit
+```
+
+
+# Problem5
+
+```{r}
+test_data <- read.csv("vowel.test.txt")
+test_data$y <- as.factor(test_data$y)
+test_data <- test_data[2:11]
+test_data
+```
+
+
+```{r}
+#from the test data model we could know that when the mtry=3 and nodesize=1, error is minimal
+test_fit <- randomForest(y ~ ., data=test_data,mtry=3,nodesize=1)
+test_pred <- predict(test_fit, test_data)
+err.test <- 1 - mean(test_fit ==test_fit$y )
+err.test
+```
+
