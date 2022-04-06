@@ -21,6 +21,7 @@ library('viridis')  ## viridis color palette
 ```
 
 
+
 # Problem1&2
 
 ```{r}
@@ -87,10 +88,9 @@ test_data
 
 
 ```{r}
-#from the test data model we could know that when the mtry=3 and nodesize=1, error is minimal
-test_fit <- randomForest(y ~ ., data=test_data,mtry=3,nodesize=1)
-test_pred <- predict(test_fit, test_data)
-err.test <- 1 - mean(test_fit ==test_fit$y )
+#We will you best_fit for the result here
+test_pred <- predict(best_fit, test_data)
+err.test <- 1 - mean(best_fit ==best_fit$y )
 err.test
 ```
 

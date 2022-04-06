@@ -620,19 +620,19 @@ vowel_fit
     ##                      Number of trees: 500
     ## No. of variables tried at each split: 3
     ## 
-    ##         OOB estimate of  error rate: 3.41%
+    ##         OOB estimate of  error rate: 3.22%
     ## Confusion matrix:
     ##     1  2  3  4  5  6  7  8  9 10 11 class.error
     ## 1  48  0  0  0  0  0  0  0  0  0  0  0.00000000
     ## 2   0 48  0  0  0  0  0  0  0  0  0  0.00000000
-    ## 3   0  0 48  0  0  0  0  0  0  0  0  0.00000000
+    ## 3   0  0 47  1  0  0  0  0  0  0  0  0.02083333
     ## 4   0  0  0 47  0  1  0  0  0  0  0  0.02083333
-    ## 5   0  0  0  0 45  2  0  0  0  0  1  0.06250000
-    ## 6   0  0  0  0  0 43  0  0  0  0  5  0.10416667
-    ## 7   0  0  0  0  2  0 44  2  0  0  0  0.08333333
+    ## 5   0  0  0  0 46  1  0  0  0  0  1  0.04166667
+    ## 6   0  0  0  0  0 42  0  0  0  0  6  0.12500000
+    ## 7   0  0  0  0  2  0 45  1  0  0  0  0.06250000
     ## 8   0  0  0  0  0  0  0 48  0  0  0  0.00000000
-    ## 9   0  0  0  0  0  0  1  1 45  1  0  0.06250000
-    ## 10  0  0  0  0  0  0  1  0  0 47  0  0.02083333
+    ## 9   0  0  0  0  0  0  1  0 46  1  0  0.04166667
+    ## 10  0  0  0  0  0  0  0  0  1 47  0  0.02083333
     ## 11  0  0  0  0  0  1  0  0  0  0 47  0.02083333
 
 # Problem4
@@ -1177,13 +1177,12 @@ test_data
     ## 462 11 -3.291  2.324 -0.679  0.285  0.441  0.557 -0.227  0.115 -1.046
 
 ``` r
-#from the test data model we could know that when the mtry=3 and nodesize=1, error is minimal
-test_fit <- randomForest(y ~ ., data=test_data,mtry=3,nodesize=1)
-test_pred <- predict(test_fit, test_data)
-err.test <- 1 - mean(test_fit ==test_fit$y )
+#We will you best_fit for the result here
+test_pred <- predict(best_fit, test_data)
+err.test <- 1 - mean(best_fit ==best_fit$y )
 ```
 
-    ## Warning in `==.default`(test_fit, test_fit$y): longer object length is not a
+    ## Warning in `==.default`(best_fit, best_fit$y): longer object length is not a
     ## multiple of shorter object length
 
     ## Warning in is.na(e1) | is.na(e2): longer object length is not a multiple of
@@ -1193,4 +1192,4 @@ err.test <- 1 - mean(test_fit ==test_fit$y )
 err.test
 ```
 
-    ## [1] 0.9935065
+    ## [1] 0.9943182
