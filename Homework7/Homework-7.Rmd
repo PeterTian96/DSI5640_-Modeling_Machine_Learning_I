@@ -284,4 +284,4 @@ nn_preds <- function() {
 nn_preds()
 ```
 
-# Thus, we can find that the results are very close. 
+## Thus, we can find that the results are very close. 
