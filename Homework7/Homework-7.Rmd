@@ -6,15 +6,16 @@ output: github_document
 
 Goal: Get started using Keras to construct simple neural networks
 Work through the "Image Classification" tutorial on the RStudio Keras website.
-Use the Keras library to re-implement the simple neural network discussed during lecture for the mixture data (see nnet.R). Use a single 10-node hidden layer; fully connected.
 Create a figure to illustrate that the predictions are (or are not) similar using the 'nnet' function versus the Keras model.
 (optional extra credit) Convert the neural network described in the "Image Classification" tutorial to a network that is similar to one of the convolutional networks described during lecture on 4/15 (i.e., Net-3, Net-4, or Net-5) and also described in the ESL book section 11.7. See the !ConvNet tutorial on the RStudio Keras website.
 
 `
-
+# Work through the “Image Classification” tutorial on the RStudio Keras website
 ```{r}
 library(keras)
 library(tensorflow)
+# Please use the follow to add model
+#install_keras()
 ```
 
 
@@ -171,10 +172,116 @@ class_pred
 
 
 
+# Use the Keras library to re-implement the simple neural network discussed during lecture for the datture data (see nnet.R). Use a single 10-node hidden layer; fully connected.
 
 
 
+```{r}
+library('rgl')
+library('nnet')
+library('dplyr')
+library('ElemStatLearn')
+```
+
+```{r}
+## load binary classification example data
+data("datture.example")
+dat <- mixture.example
+```
 
 
+```{r}
+set.seed(1)
+#initializes model
+k_model <- keras_model_sequential()
+#creates 10-node hidden layer
+k_model %>%
+  #builds 10-node hidden layer
+  layer_dense(units = 10, activation = 'relu') %>%
+  #builds binary output layer
+  layer_dense(units = 2, activation = 'softmax') 
+#complies model
+k_model %>% compile(
+  optimizer = 'adam', 
+  loss = 'sparse_categorical_crossentropy',
+  metrics = c('accuracy')
+)
+```
+
+```{r}
+set.seed(1)
+#fits model
+k_model %>% fit(x = dat$x, y = dat$y, epochs = 5, verbose = 2)
+```
+
+```{r}
+#checks accuracy and loss
+k_score <- k_model %>% evaluate(dat$x, dat$y, verbose = 0)
+cat('Test loss:', k_score[1], "\n")
+cat('Test accuracy:', k_score[2], "\n")
+```
+
+```{r}
+#Uses Prof. Shotwell's code to print datture data with true contour line
+plot_datture_data <- expression({
+  plot(dat$x[,1], dat$x[,2],
+       col=ifelse(dat$y==0, 'blue', 'orange'),
+       pch=20,
+       xlab=expression(x[1]),
+       ylab=expression(x[2]))
+  ## draw Bayes (True) classification boundary
+  prob <- matrix(dat$prob, length(dat$px1), length(dat$px2))
+  cont <- contourLines(dat$px1, dat$px2, prob, levels=0.5)
+  rslt <- sapply(cont, lines, col='purple')
+})
+#tests to ensure it works
+eval(plot_datture_data)
+```
+```{r}
+set.seed(1)
+#Predicts values based on constructed model
+k_probs = k_model %>% predict(dat$xnew)
+plot_k_preds <- function() {
+  
+  #plots original data
+  eval(plot_datture_data)
+  #computes and plots keras prediction
+  probs <- k_probs[,1]
+  probm <- matrix(probs, length(dat$px1), length(dat$px2))
+  cls <- contourLines(dat$px1, dat$px2, probm, levels=0.5)
+  rslt <- sapply(cls, lines, col='blue', lwd = 2)
+  legend(-2.5,-1, legend=c("Bayes Classification Boundary", "Keras Model Prediction"), col=c("purple", "red"), lty=1:1, cex=0.5)
+}
+plot_k_preds()
+```
 
 
+# Create a figure to illustrate that the predictions are (or are not) similar using the 'nnet' function versus the Keras model.
+
+```{r}
+set.seed(1)
+nn_fit <- nnet(x=dat$x, y=dat$y, size=5, entropy=TRUE, decay=0)
+nn_probs <- predict(nn_fit, dat$xnew, type="raw")[,1]
+nn_preds <- function() {
+    eval(plot_datture_data)
+  
+  probs <- nn_probs
+  probm <- matrix(probs, length(dat$px1), length(dat$px2))
+  cls <- contourLines(dat$px1, dat$px2, probm, levels=0.5)
+  rslt <- sapply(cls, lines, col='orange', lwd = 1)
+  
+  probs1 <- k_probs
+  probm1 <- matrix(probs1, length(dat$px1), length(dat$px2))
+  cls1 <- contourLines(dat$px1, dat$px2, probm1, levels=0.5)
+  rslt1 <- sapply(cls1, lines, col='blue', lwd = 1)
+  
+  legend(-2.5,-1, legend=c("Bayes Classification Boundary", 
+                           "Keras Model Prediction", 
+                           "NNet Model Prediction"), 
+         col=c("red", "green","yellow"), lty=1:1, cex=0.5)
+  
+}
+nn_preds()
+```
+
+# Thus, we can find that the results are very close. 
